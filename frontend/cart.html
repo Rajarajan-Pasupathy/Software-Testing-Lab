@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Your Cart - ShopE</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #f2f4f8;
+    }
+
+    .navbar {
+      background-color: #007bff;
+      color: white;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .cart-container {
+      max-width: 900px;
+      margin: 30px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #ddd;
+      padding: 15px 0;
+    }
+
+    .cart-item img {
+      width: 80px;
+      height: auto;
+      border-radius: 8px;
+      margin-right: 20px;
+    }
+
+    .cart-details {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+
+    .cart-details h3 {
+      margin: 0 10px;
+    }
+
+    .quantity {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .quantity button {
+      padding: 5px 10px;
+      font-size: 14px;
+    }
+
+    .remove-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .remove-btn:hover {
+      background-color: #c82333;
+    }
+
+    .total {
+      text-align: right;
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 60px;
+      font-size: 20px;
+      color: gray;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="navbar">
+    <h1>ShopE</h1>
+    <a href="home.html" style="color: white; text-decoration: none;">Back to Home</a>
+  </div>
+
+  <div class="cart-container">
+    <h2>Your Cart</h2>
+    <div id="cartItems"></div>
+    <div id="total" class="total"></div>
+  </div>
+
+  <script>
+    const cartContainer = document.getElementById("cartItems");
+    const totalDisplay = document.getElementById("total");
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    function renderCart() {
+      cartContainer.innerHTML = "";
+      if (cart.length === 0) {
+        cartContainer.innerHTML = `<div class="empty">Your cart is empty.</div>`;
+        totalDisplay.textContent = "";
+        return;
+      }
+
+      let total = 0;
+
+      cart.forEach((item, index) => {
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "cart-item";
+        itemDiv.innerHTML = `
+          <div class="cart-details">
+            <img src="${item.image}" alt="${item.name}">
+            <div>
+              <h3>${item.name}</h3>
+              <p>Price: $${item.price}</p>
+              <div class="quantity">
+                <button onclick="updateQuantity(${index}, -1)">-</button>
+                <span>${item.quantity}</span>
+                <button onclick="updateQuantity(${index}, 1)">+</button>
+              </div>
+            </div>
+          </div>
+          <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+        `;
+        cartContainer.appendChild(itemDiv);
+      });
+
+      totalDisplay.textContent = "Total: $" + total.toFixed(2);
+    }
+
+    function updateQuantity(index, change) {
+      cart[index].quantity += change;
+      if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart();
+    }
+
+    function removeItem(index) {
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      renderCart();
+    }
+
+    renderCart();
+  </script>
+</body>
+</html>
