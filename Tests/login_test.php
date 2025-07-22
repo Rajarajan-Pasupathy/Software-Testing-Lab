@@ -6,7 +6,7 @@ use Facebook\WebDriver\Remote\DesiredCapabilities;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverExpectedCondition;
 
-$host = 'http://localhost:51491'; // your ChromeDriver port
+$host = 'http://localhost:63328'; // your ChromeDriver port
 $loginUrl = 'http://localhost/ecommerce%20ws/frontend/login.html'; // your login page URL (note the space encoded as %20)
 
 try {
